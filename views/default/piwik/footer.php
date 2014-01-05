@@ -26,8 +26,8 @@ if ($entity['showga']) {
 <!-- Piwik -->
 <script type="text/javascript">
   var _paq = _paq || [];
-  _paq.push(["setCookieDomain", "*.mittelstand-cio.de"]);
-  _paq.push(["setDomains", ["*.mittelstand-cio.de"]]);
+  //_paq.push(["setCookieDomain", "*.mittelstand-cio.de"]);
+  //_paq.push(["setDomains", ["*.mittelstand-cio.de"]]);
   _paq.push(["trackPageView"]);
   _paq.push(["enableLinkTracking"]);
 
