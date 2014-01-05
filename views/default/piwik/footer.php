@@ -1,48 +1,50 @@
-<?php /* Piwik plugin for the Elgg social network engine. */ ?>
-
 <?php
-$data = elgg_get_entities(array("types"=>"object", "subtypes"=>"modpiwik", "owner_guids"=> '0' , "order_by"=>"","limit"=>0));
-if(isset($data[0])) {
-	$entity = $data[0];
-	if($entity->showga) {
-?>
-<script type="text/javascript">
-var pkBaseURL = (("https:" == document.location.protocol) ? "https://<?php echo $entity->trackurl; ?>/" : "http://<?php echo $entity->trackurl; ?>/");
-document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-</script><script type="text/javascript">
-try {
-var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", <?php echo $entity->trackid; ?>);
+/* Piwik plugin for the Elgg social network engine. */
 
-<?php if (get_input('q')){?>
-<?php 
-$category = false;
-if (get_input('entity_subtype', false)){
-	$category = get_input('entity_subtype');
-}else{
-	if (get_input('entity_type', false)){
-		$category = get_input('entity_type');
-	}		
+$metadata = elgg_get_metadata(array(
+    "type" => "object",
+    "subtype" => "modpiwik"
+        ));
+$entity['showga'] = NULL;
+$entity['trackid'] = NULL;
+$entity['trackurl'] = NULL;
+$entity['state'] = NULL;
+foreach ($metadata as $value) {
+    $entity[$value->name] = $value->value;
 }
-?>
-piwikTracker.trackSiteSearch(
-		"<?php echo get_input('q')?>", // Search keyword searched for
-		<?php if ($category){ ?>"<?php echo $category;?>"<?php }else{?>false<?php }?>, // Search category selected in your search engine. If you do not need this, set to false
-		false // Number of results on the Search results page. Zero indicates a 'No Result Search Keyword'. Set to false if you don't know
-		);
-<?php }else{?>
-piwikTracker.trackPageView();
-<?php }?>
+if ($entity['showga']) {
+    if (get_input('q')) {
+        $category = false;
+        if (get_input('entity_subtype', false)) {
+            $category = get_input('entity_subtype');
+        } else {
+            if (get_input('entity_type', false)) {
+                $category = get_input('entity_type');
+            }
+        }
+    }  ?>
+<!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(["setCookieDomain", "*.mittelstand-cio.de"]);
+  _paq.push(["setDomains", ["*.mittelstand-cio.de"]]);
+  _paq.push(["trackPageView"]);
+  _paq.push(["enableLinkTracking"]);
 
-
-
-piwikTracker.enableLinkTracking();
-} catch( err ) { }
+  (function() {
+    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://<?php echo $entity['trackurl']; ?>";
+    _paq.push(["setTrackerUrl", u+"/piwik.php"]);
+    _paq.push(["setSiteId", "<?php echo $entity['trackid']; ?>"]);
+    var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+    g.defer=true; g.async=true; g.src=u+"/piwik.js"; s.parentNode.insertBefore(g,s);
+  })();
 </script>
-<noscript><p><img src="http://<?php echo $entity->trackurl; ?>/piwik.php?idsite=<?php echo $entity->trackid; ?>" style="border:0" alt=""/></p></noscript>
-<?php }
-	} else {
-		if ($_SESSION['user']->admin || $_SESSION['user']->siteadmin) {
-			system_message("You've installed the Piwik plugin but you still need to go to the Piwik section from within the admin panel.");
-		}
-	}
+<noscript><img src="https://<?php echo $entity['trackurl']; ?>/piwik.php?idsite=<?php echo $entity['trackid']; ?>&amp;rec=1&amp;action_name=elgg" style="border:0" alt="" /></noscript>
+<!-- End Piwik Code -->
+   <?php
+} else {
+    if ($_SESSION['user']->admin || $_SESSION['user']->siteadmin) {
+        system_message("You've installed the Piwik plugin but you still need to go to the Piwik section from within the admin panel.");
+    }
+}
 ?>

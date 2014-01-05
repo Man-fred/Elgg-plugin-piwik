@@ -1,6 +1,6 @@
 <?php
 
-	$english = array(
+	$german = array(
 			'piwik' => 'Piwik Analyse',
 			'piwik:formenabled' => 'Aktivieren?',
 			'piwik:description' => 'Dieses Modul erm&ouml;glicht Ihnen das Besucherverhalten dieser Seite mit Piwik zu analysieren.',
